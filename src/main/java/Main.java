@@ -37,8 +37,11 @@ public class Main {
       }
       int length = Integer.parseInt(bencodedString.substring(0, firstColonIndex));
       return bencodedString.substring(firstColonIndex+1, firstColonIndex+1+length);
-    } else {
-      throw new RuntimeException("Only strings are supported at the moment");
+    } else if (Character.isAlphabetic(bencodedString.charAt(0))) {
+      return bencodedString.substring(1, bencodedString.length()-1);
+    }
+    else {
+      throw new RuntimeException("Only strings and integers are supported at the moment");
     }
   }
   
