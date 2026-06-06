@@ -1,50 +1,79 @@
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
+  private static Predicate<String> STARTS_WITH_ARRAY =  (s) -> s.startsWith("i");
+  private static Predicate<String> STARTS_WITH_INTEGER = (s) -> Character.isDigit(s.charAt(0));
+  private static Predicate<String> STARTS_WITH_ALPHABETICAL = (s) -> Character.isAlphabetic(s.charAt(0));
+
   private static final Gson gson = new Gson();
 
   public static void main(String[] args) throws Exception {
     // You can use print statements as follows for debugging, they'll be visible when running tests.
     System.err.println("Logs from your program will appear here!");
+
     
     String command = args[0];
     String decodedOutput = "";
+    final String bencodedValue = args[1];
     if("decode".equals(command)) {
-      String bencodedValue = args[1];
-      if (Character.isDigit(bencodedValue.charAt(0))) {
-        final String decodedString = decodeBencodeString(bencodedValue);
+      if (STARTS_WITH_ARRAY.test(bencodedValue)) {
+        decodedOutput = decodeBencodeArray(bencodedValue).toString();
+      } else if (STARTS_WITH_INTEGER.test(bencodedValue)) {
+        final String decodedString = decodeBencodeString(bencodedValue).decoded();
         decodedOutput = gson.toJson(decodedString);
-      } else if (Character.isAlphabetic(bencodedValue.charAt(0))) {
-        decodedOutput = decodeBencodeInteger(bencodedValue);
+      } else {
+          decodedOutput = decodeBencodeInteger(bencodedValue).decoded();
       }
+
+      System.out.println(decodedOutput);
     } else {
       System.out.println("Unknown command: " + command);
     }
-    System.out.println(decodedOutput);
+
 
   }
 
-  static String decodeBencodeString(String bencodedString) {
-    if (Character.isDigit(bencodedString.charAt(0))) {
-      int firstColonIndex = 0;
-      for(int i = 0; i < bencodedString.length(); i++) { 
-        if(bencodedString.charAt(i) == ':') {
-          firstColonIndex = i;
-          break;
-        }
+  static BencodeMetadata decodeBencodeString(String bencodedString) {
+    final int firstColonIndex = bencodedString.indexOf(':');
+    final int encodeLength = firstColonIndex
+            + 1 // Colon
+            + Integer.parseInt(bencodedString.substring(0, firstColonIndex));
+
+    final String decoded = bencodedString.substring(firstColonIndex+1, encodeLength);
+
+    return new BencodeMetadata(decoded, encodeLength);
+  }
+
+  static BencodeMetadata decodeBencodeInteger(String bencodedInteger) {
+    final int encodeLength = bencodedInteger.indexOf('e');
+    final String decoded = bencodedInteger.substring(0, encodeLength);
+
+    return new BencodeMetadata(decoded, encodeLength);
+  }
+
+  static List<String> decodeBencodeArray(final String bencodedString) {
+    final List<String> bencodeArray = new ArrayList<>();
+    String mutableBencodedString = bencodedString;
+    while (mutableBencodedString.charAt(0) != 'e') {
+
+      final BencodeMetadata bencodeMetadata;
+
+      if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
+        bencodeMetadata = decodeBencodeInteger(mutableBencodedString);
+      } else {
+        bencodeMetadata = decodeBencodeString(mutableBencodedString);
       }
-      int length = Integer.parseInt(bencodedString.substring(0, firstColonIndex));
-      return bencodedString.substring(firstColonIndex+1, firstColonIndex+1+length);
-    } else {
-      throw new RuntimeException("Only strings and integers are supported at the moment");
+      bencodeArray.add(bencodeMetadata.decoded());
+      mutableBencodedString = mutableBencodedString.substring(0, bencodeMetadata.encodedLength()+1);
     }
-  }
 
-  static String decodeBencodeInteger(String bencodedInteger) {
-    return bencodedInteger.substring(1, bencodedInteger.length()-1);
+    return bencodeArray;
   }
   
 }
