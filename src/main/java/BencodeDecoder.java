@@ -64,7 +64,7 @@ public class BencodeDecoder {
             sb.append(key.value()).append(":");
 
             DecodeMetadata value = decodeValue(s, cursor);
-            sb.append(value.value());
+            sb.append(value.value()).append(",");
             cursor = value.nextIndex();
         }
         final String mapString = sb.append("}").toString();
