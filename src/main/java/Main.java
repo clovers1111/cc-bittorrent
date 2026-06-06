@@ -27,7 +27,7 @@ public class Main {
                 decodeBencodeArray(bencodedValue).decoded())
                 .orElse(List.of().toString());
       } else if (STARTS_WITH_INTEGER.test(bencodedValue)) {
-        final String decodedString = decodeBencodeString(bencodedValue).decoded();
+        decodedOutput = decodeBencodeString(bencodedValue).decoded();
       } else {
           decodedOutput = decodeBencodeInteger(bencodedValue).decoded();
       }
@@ -39,6 +39,8 @@ public class Main {
 
 
   }
+
+  static
 
   static BencodeMetadata decodeBencodeString(String bencodedString) {
     final int firstColonIndex = bencodedString.indexOf(':');
