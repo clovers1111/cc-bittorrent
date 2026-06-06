@@ -68,7 +68,7 @@ public class Main {
       final BencodeMetadata bencodeMetadata;
 
       if (STARTS_WITH_ARRAY.test(mutableBencodedString)) {
-        bencodeMetadata = new BencodeMetadata((decodeBencodeArray(bencodedString).toString()), totalLength);
+        bencodeMetadata = decodeBencodeArray(mutableBencodedString);
       } else if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
         bencodeMetadata = decodeBencodeInteger(mutableBencodedString);
       } else if (STARTS_WITH_INTEGER.test(mutableBencodedString)){
@@ -80,7 +80,7 @@ public class Main {
       totalLength += bencodeMetadata.encodedLength();
       mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength());
     }
-    return new BencodeMetadata(bencodeArray.toString(), totalLength);
+    return new BencodeMetadata(bencodeArray.toString(), totalLength+1);
   }
   
 }
