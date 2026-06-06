@@ -10,7 +10,7 @@ public class Main {
     if ("decode".equals(command)) {
       final BencodeDecoder bencodeDecoder = new BencodeDecoder();
       final DecodeMetadata decodeMetadata = bencodeDecoder.decodeValue(bencodedValue, 0);
-      System.out.println(gson.toJson(decodeMetadata.value()));
+      System.out.println(decodeMetadata.value());
     } else {
       System.out.println("Unknown command: " + command);
     }
