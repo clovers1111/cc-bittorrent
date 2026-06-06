@@ -40,8 +40,6 @@ public class Main {
 
   }
 
-  static
-
   static BencodeMetadata decodeBencodeString(String bencodedString) {
     final int firstColonIndex = bencodedString.indexOf(':');
     final int encodeLength = firstColonIndex
