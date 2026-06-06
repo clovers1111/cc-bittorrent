@@ -80,7 +80,9 @@ public class Main {
       totalLength += bencodeMetadata.encodedLength();
       mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength());
     }
-    return new BencodeMetadata(bencodeArray.toString(), totalLength+1);
+    // account for e (sentinel character for array encoding)
+    totalLength += 1;
+    return new BencodeMetadata(bencodeArray.toString(), totalLength);
   }
   
 }
