@@ -26,7 +26,6 @@ public class Main {
         decodedOutput = decodeBencodeArray(bencodedValue).toString();
       } else if (STARTS_WITH_INTEGER.test(bencodedValue)) {
         final String decodedString = decodeBencodeString(bencodedValue).decoded();
-        decodedOutput = gson.toJson(decodedString);
       } else {
           decodedOutput = decodeBencodeInteger(bencodedValue).decoded();
       }
@@ -46,8 +45,9 @@ public class Main {
             + Integer.parseInt(bencodedString.substring(0, firstColonIndex));
 
     final String decoded = bencodedString.substring(firstColonIndex+1, encodeLength);
+    final String decodedJson = gson.toJson(decoded);
 
-    return new BencodeMetadata(decoded, encodeLength);
+    return new BencodeMetadata(decodedJson, encodeLength);
   }
 
   static BencodeMetadata decodeBencodeInteger(String bencodedInteger) {
