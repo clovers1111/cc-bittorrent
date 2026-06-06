@@ -62,7 +62,8 @@ public class Main {
   static BencodeMetadata decodeBencodeArray(final String bencodedString) {
     final List<String> bencodeArray = new ArrayList<>();
     String mutableBencodedString = bencodedString.substring(1);
-    int totalLength = 0;
+    // account for l (begin array character)
+    int totalLength = 1;
     while (mutableBencodedString.charAt(0) != 'e') {
 
       final BencodeMetadata bencodeMetadata;
