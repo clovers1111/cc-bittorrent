@@ -51,16 +51,16 @@ public class Main {
   }
 
   static BencodeMetadata decodeBencodeInteger(String bencodedInteger) {
-    final int encodeLength = bencodedInteger.indexOf('e');
-    final String decoded = bencodedInteger.substring(0, encodeLength);
+    final int encodeLength = bencodedInteger.indexOf('e') + 1;
+    final String decoded = bencodedInteger.substring(1, encodeLength-1);
 
     return new BencodeMetadata(decoded, encodeLength);
   }
 
   static List<String> decodeBencodeArray(final String bencodedString) {
     final List<String> bencodeArray = new ArrayList<>();
-    String mutableBencodedString = bencodedString.substring(1);
-    while (mutableBencodedString.charAt(0) != 'e') {
+    String mutableBencodedString = bencodedString.substring(1, bencodedString.length() - 1);
+    while (!mutableBencodedString.isEmpty()) {
 
       final BencodeMetadata bencodeMetadata;
 
@@ -72,7 +72,7 @@ public class Main {
         return List.of();
       }
       bencodeArray.add(bencodeMetadata.decoded());
-      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength()-1);
+      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength());
     }
     return bencodeArray;
   }
