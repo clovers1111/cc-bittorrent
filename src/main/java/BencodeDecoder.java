@@ -2,6 +2,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 public class BencodeDecoder {
 
@@ -29,7 +32,7 @@ public class BencodeDecoder {
         int start = colon + 1;
         int end = start + length;
 
-        String value = gson.toJson(s.substring(start, end)).trim();
+        String value = gson.toJson(s.substring(start, end));
         return new DecodeMetadata(value, end);
     }
 
@@ -49,7 +52,10 @@ public class BencodeDecoder {
             cursor = item.nextIndex();
         }
 
-        return new DecodeMetadata(items, cursor + 1); // skip closing 'e'
+        // Trailing spaces for objects lead to test failure
+        final List<String> trimmedArray = items.stream().map(o -> o.toString().trim()).toList();
+
+        return new DecodeMetadata(trimmedArray, cursor + 1); // skip closing 'e'
     }
 
     private DecodeMetadata decodeMap(String s, int index) {
