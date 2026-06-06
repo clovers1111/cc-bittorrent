@@ -45,7 +45,7 @@ public class BencodeDecoder {
 
         while (s.charAt(cursor) != 'e') {
             DecodeMetadata item = decodeValue(s, cursor);
-            items.add(item.value());
+            items.add(item.value().toString().trim());
             cursor = item.nextIndex();
         }
 
