@@ -53,9 +53,9 @@ public class BencodeDecoder {
         }
 
         // Trailing spaces for objects lead to test failure
-        final List<String> trimmedArray = items.stream().map(o -> o.toString().trim()).toList();
+        final String trimmedArrayAsString = "[" + items.stream().map(o -> o.toString().trim()).collect(Collectors.joining(",")) + "]";
 
-        return new DecodeMetadata(trimmedArray, cursor + 1); // skip closing 'e'
+        return new DecodeMetadata(trimmedArrayAsString, cursor + 1); // skip closing 'e'
     }
 
     private DecodeMetadata decodeMap(String s, int index) {
