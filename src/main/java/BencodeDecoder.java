@@ -57,7 +57,7 @@ public class BencodeDecoder {
         sb.append("{");
         int cursor = index + 1; // skip 'd'
 
-        for (int i = 0; i < 2; i++) {
+        while (s.charAt(cursor) != 'e') {
             DecodeMetadata key = decodeValue(s, cursor);
             cursor = key.nextIndex();
 
