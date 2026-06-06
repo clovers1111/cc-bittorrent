@@ -72,7 +72,7 @@ public class Main {
         return List.of();
       }
       bencodeArray.add(bencodeMetadata.decoded());
-      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength()+1);
+      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength()-1);
     }
     return bencodeArray;
   }
