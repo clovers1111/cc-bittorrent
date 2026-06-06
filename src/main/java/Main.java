@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
-  private static Predicate<String> STARTS_WITH_ARRAY =  (s) -> s.startsWith("i");
+  private static Predicate<String> STARTS_WITH_ARRAY =  (s) -> s.startsWith("l");
   private static Predicate<String> STARTS_WITH_INTEGER = (s) -> Character.isDigit(s.charAt(0));
   private static Predicate<String> STARTS_WITH_ALPHABETICAL = (s) -> Character.isAlphabetic(s.charAt(0));
 
@@ -66,13 +66,14 @@ public class Main {
 
       if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
         bencodeMetadata = decodeBencodeInteger(mutableBencodedString);
-      } else {
+      } else if (STARTS_WITH_INTEGER.test(mutableBencodedString)){
         bencodeMetadata = decodeBencodeString(mutableBencodedString);
+      } else {
+        return List.of();
       }
       bencodeArray.add(bencodeMetadata.decoded());
       mutableBencodedString = mutableBencodedString.substring(0, bencodeMetadata.encodedLength()+1);
     }
-
     return bencodeArray;
   }
   
