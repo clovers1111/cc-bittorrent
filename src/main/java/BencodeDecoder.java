@@ -29,7 +29,7 @@ public class BencodeDecoder {
         int start = colon + 1;
         int end = start + length;
 
-        String value = gson.toJson(s.substring(start, end));
+        String value = gson.toJson(s.substring(start, end)).trim();
         return new DecodeMetadata(value, end);
     }
 
@@ -45,7 +45,7 @@ public class BencodeDecoder {
 
         while (s.charAt(cursor) != 'e') {
             DecodeMetadata item = decodeValue(s, cursor);
-            items.add(item.value().toString().trim());
+            items.add(item.value());
             cursor = item.nextIndex();
         }
 
