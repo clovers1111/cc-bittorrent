@@ -31,7 +31,7 @@ public class Main {
           decodedOutput = decodeBencodeInteger(bencodedValue).decoded();
       }
 
-      System.out.println(decodedOutput);
+      System.out.print(decodedOutput);
     } else {
       System.out.println("Unknown command: " + command);
     }
