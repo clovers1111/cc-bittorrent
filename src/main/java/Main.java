@@ -59,8 +59,8 @@ public class Main {
 
   static List<String> decodeBencodeArray(final String bencodedString) {
     final List<String> bencodeArray = new ArrayList<>();
-    String mutableBencodedString = bencodedString.substring(1, bencodedString.length()-1);
-    while (!mutableBencodedString.isEmpty()) {
+    String mutableBencodedString = bencodedString.substring(1);
+    while (mutableBencodedString.charAt(0) != 'e') {
 
       final BencodeMetadata bencodeMetadata;
 
@@ -72,7 +72,7 @@ public class Main {
         return List.of();
       }
       bencodeArray.add(bencodeMetadata.decoded());
-      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength()+1);
+      mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength());
     }
     return bencodeArray;
   }
