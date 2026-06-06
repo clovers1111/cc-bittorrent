@@ -23,7 +23,9 @@ public class Main {
     final String bencodedValue = args[1];
     if("decode".equals(command)) {
       if (STARTS_WITH_ARRAY.test(bencodedValue)) {
-        decodedOutput = decodeBencodeArray(bencodedValue).toString();
+        decodedOutput = Optional.of(
+                decodeBencodeArray(bencodedValue).decoded())
+                .orElse(List.of().toString());
       } else if (STARTS_WITH_INTEGER.test(bencodedValue)) {
         final String decodedString = decodeBencodeString(bencodedValue).decoded();
       } else {
@@ -57,26 +59,28 @@ public class Main {
     return new BencodeMetadata(decoded, encodeLength);
   }
 
-  static List<String> decodeBencodeArray(final String bencodedString) {
+  static BencodeMetadata decodeBencodeArray(final String bencodedString) {
     final List<String> bencodeArray = new ArrayList<>();
-    String mutableBencodedString = bencodedString.substring(1, bencodedString.length() - 1);
-    while (!mutableBencodedString.isEmpty()) {
+    String mutableBencodedString = bencodedString.substring(1);
+    int totalLength = 0;
+    while (mutableBencodedString.charAt(0) != 'e') {
 
       final BencodeMetadata bencodeMetadata;
 
       if (STARTS_WITH_ARRAY.test(mutableBencodedString)) {
-        return List.of(decodeBencodeArray(mutableBencodedString).toString());
+        bencodeMetadata = new BencodeMetadata((decodeBencodeArray(bencodedString).toString()), totalLength);
       } else if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
         bencodeMetadata = decodeBencodeInteger(mutableBencodedString);
       } else if (STARTS_WITH_INTEGER.test(mutableBencodedString)){
         bencodeMetadata = decodeBencodeString(mutableBencodedString);
       } else {
-        return List.of();
+        return null;
       }
       bencodeArray.add(bencodeMetadata.decoded());
+      totalLength += bencodeMetadata.encodedLength();
       mutableBencodedString = mutableBencodedString.substring(bencodeMetadata.encodedLength());
     }
-    return bencodeArray;
+    return new BencodeMetadata(bencodeArray.toString(), totalLength);
   }
   
 }
