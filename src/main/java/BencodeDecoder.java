@@ -16,8 +16,10 @@ public class BencodeDecoder {
             return decodeList(s, index);
         } else if (Character.isDigit(c)) {
             return decodeString(s, index);
-        }
+        } else if (c == 'd') {
+            return decodeMap(s, index);
 
+        }
         throw new IllegalArgumentException("Invalid bencode at index " + index);
     }
 
@@ -48,5 +50,24 @@ public class BencodeDecoder {
         }
 
         return new DecodeMetadata(items, cursor + 1); // skip closing 'e'
+    }
+
+    private DecodeMetadata decodeMap(String s, int index) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        int cursor = index + 1; // skip 'd'
+
+        for (int i = 0; i < 2; i++) {
+            DecodeMetadata key = decodeValue(s, cursor);
+            cursor = key.nextIndex();
+
+            sb.append(key.value()).append(":");
+
+            DecodeMetadata value = decodeValue(s, cursor);
+            cursor = value.nextIndex();
+        }
+        final String mapString = sb.append("}").toString();
+
+        return new DecodeMetadata(mapString, cursor + 1); // skip closing 'e'
     }
 }
