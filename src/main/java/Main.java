@@ -64,7 +64,9 @@ public class Main {
 
       final BencodeMetadata bencodeMetadata;
 
-      if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
+      if (STARTS_WITH_ARRAY.test(mutableBencodedString)) {
+        return List.of(decodeBencodeArray(mutableBencodedString).toString());
+      } else if (STARTS_WITH_ALPHABETICAL.test(mutableBencodedString)) {
         bencodeMetadata = decodeBencodeInteger(mutableBencodedString);
       } else if (STARTS_WITH_INTEGER.test(mutableBencodedString)){
         bencodeMetadata = decodeBencodeString(mutableBencodedString);
