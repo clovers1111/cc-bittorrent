@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 public class Main {
   private static Predicate<String> STARTS_WITH_ARRAY =  (s) -> s.startsWith("l");
   private static Predicate<String> STARTS_WITH_INTEGER = (s) -> Character.isDigit(s.charAt(0));
-  private static Predicate<String> STARTS_WITH_ALPHABETICAL = (s) -> Character.isAlphabetic(s.charAt(0));
+  private static Predicate<String> STARTS_WITH_ALPHABETICAL = (s) -> s.startsWith("i");
 
   private static final Gson gson = new Gson();
 
