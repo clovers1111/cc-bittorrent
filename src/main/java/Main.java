@@ -21,7 +21,7 @@ public class Main {
       System.out.println(decodeMetadata.value());
 
     } else if ("info".equals(command)) {
-      final Path torrentFile = Path.of(args[2]);
+      final Path torrentFile = Path.of(args[1]);
       final byte[] byteArray = Files.readAllBytes(torrentFile);
 
       final String bencodedValue = new String(byteArray, StandardCharsets.ISO_8859_1);
