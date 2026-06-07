@@ -1,16 +1,39 @@
 import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 public class Main {
   private static final Gson gson = new Gson();
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     String command = args[0];
-    String bencodedValue = args[1];
+
+    final BencodeDecoder bencodeDecoder = new BencodeDecoder();
+
 
     if ("decode".equals(command)) {
-      final BencodeDecoder bencodeDecoder = new BencodeDecoder();
+      final String bencodedValue = args[1];
       final DecodeMetadata decodeMetadata = bencodeDecoder.decodeValue(bencodedValue, 0);
       System.out.println(decodeMetadata.value());
+
+    } else if ("info".equals(command)) {
+      final Path torrentFile = Path.of(args[2]);
+      final byte[] byteArray = Files.readAllBytes(torrentFile);
+
+      final String bencodedValue = new String(byteArray, StandardCharsets.ISO_8859_1);
+
+      final DecodeMetadata decodeMetadata = bencodeDecoder.decodeValue(bencodedValue, 0);
+
+      final DecodeInfo decodeInfo = DecodedParser.toDecodeInfo(decodeMetadata);
+      System.out.println(decodeInfo);
+
+
+
+
     } else {
       System.out.println("Unknown command: " + command);
     }

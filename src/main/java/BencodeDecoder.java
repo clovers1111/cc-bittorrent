@@ -4,22 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.stream;
-
 public class BencodeDecoder {
+
+    private static final char BEGIN_ARRAY = 'l';
+    private static final char BEGIN_INT = 'i';
+    private static final char BEGIN_MAP = 'd';
+    private static final char END_CHAR = 'e';
 
     private final Gson gson = new Gson();
     
     public DecodeMetadata decodeValue(String s, int index) {
         char c = s.charAt(index);
 
-        if (c == 'i') {
+        if (c == BEGIN_INT) {
             return decodeInteger(s, index);
-        } else if (c == 'l') {
+        } else if (c == BEGIN_ARRAY) {
             return decodeList(s, index);
         } else if (Character.isDigit(c)) {
             return decodeString(s, index);
-        } else if (c == 'd') {
+        } else if (c == BEGIN_MAP) {
             return decodeMap(s, index);
 
         }
@@ -37,7 +40,7 @@ public class BencodeDecoder {
     }
 
     private DecodeMetadata decodeInteger(String s, int index) {
-        int end = s.indexOf('e', index);
+        int end = s.indexOf(END_CHAR, index);
         Long value = Long.parseLong(s.substring(index + 1, end));
         return new DecodeMetadata(value, end + 1);
     }
@@ -46,7 +49,7 @@ public class BencodeDecoder {
         List<Object> items = new ArrayList<>();
         int cursor = index + 1; // skip 'l'
 
-        while (s.charAt(cursor) != 'e') {
+        while (s.charAt(cursor) != END_CHAR) {
             DecodeMetadata item = decodeValue(s, cursor);
             items.add(item.value());
             cursor = item.nextIndex();
@@ -63,7 +66,7 @@ public class BencodeDecoder {
         sb.append("{");
         int cursor = index + 1; // skip 'd'
 
-        while (s.charAt(cursor) != 'e') {
+        while (s.charAt(cursor) != END_CHAR) {
             DecodeMetadata key = decodeValue(s, cursor);
             cursor = key.nextIndex();
 
@@ -72,7 +75,7 @@ public class BencodeDecoder {
             DecodeMetadata value = decodeValue(s, cursor);
             sb.append(value.value());
 
-            if (s.charAt(value.nextIndex()) != 'e') {
+            if (s.charAt(value.nextIndex()) != END_CHAR) {
                 sb.append(",");
             }
 
