@@ -48,7 +48,7 @@ public class DecodeInfo {
         StringBuilder sb = new StringBuilder();
 
         if (announce != null) {
-            sb.append("Tracker URL: ").append(announce).append("\n");
+            sb.append("Tracker URL: ").append(announce);
         }
         if (info != null) {
             if (info.containsKey("length"))
