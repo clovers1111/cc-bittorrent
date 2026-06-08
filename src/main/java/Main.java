@@ -5,11 +5,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 public class Main {
   private static final Gson gson = new Gson();
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
     String command = args[0];
 
     final BencodeDecoder bencodeDecoder = new BencodeDecoder();
@@ -28,11 +29,9 @@ public class Main {
 
       final DecodeMetadata decodeMetadata = bencodeDecoder.decodeValue(bencodedValue, 0);
 
-      final DecodeInfo decodeInfo = DecodedParser.toDecodeInfo(decodeMetadata);
+      final DecodeInfo decodeInfo = decodeMetadata.toDecodeInfo();
+      decodeInfo.calculateInfoHash();
       System.out.println(decodeInfo);
-
-
-
 
     } else {
       System.out.println("Unknown command: " + command);
