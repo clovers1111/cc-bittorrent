@@ -4,16 +4,14 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
 
     @Override
     public void onInfoKey(Integer location) {
-        System.out.println("Info location: " + location);
-        if (startInfoIndex != null) {
+        if (startInfoIndex == null) {
             setStartInfoIndex(location);
         }
     }
 
     @Override
     public void onPiecesKey(Integer location) {
-        System.out.println("Pieces location: " + location);
-        if (piecesIndex != null) {
+        if (piecesIndex == null) {
             setPiecesIndex(piecesIndex);
         }
     }
