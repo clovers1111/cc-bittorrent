@@ -39,8 +39,6 @@ public class Main {
 
       final DecodeInfo decodeInfo = decodeMetadata.toDecodeInfo();
 
-      System.out.println(bencodeConsumer.getStartInfoIndex().toString() + " " + bencodeConsumer.getPiecesIndex());
-
       if (bencodeConsumer.getPiecesIndex() != null && bencodeConsumer.getStartInfoIndex() != null) {
         final byte[] hashingBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartInfoIndex(), bencodeConsumer.getPiecesIndex());
 

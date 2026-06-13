@@ -12,7 +12,7 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
     @Override
     public void onPiecesKey(Integer location) {
         if (piecesIndex == null) {
-            setPiecesIndex(piecesIndex);
+            setPiecesIndex(location);
         }
     }
 
