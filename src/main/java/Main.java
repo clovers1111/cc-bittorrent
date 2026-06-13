@@ -40,6 +40,8 @@ public class Main {
       final DecodeInfo decodeInfo = decodeMetadata.toDecodeInfo();
 
       if (bencodeConsumer.getPiecesIndex() != null && bencodeConsumer.getStartInfoIndex() != null) {
+        System.out.println(bencodeConsumer.getPiecesIndex());
+        System.out.println(bencodeConsumer.getStartInfoIndex());
         final byte[] hashingBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartInfoIndex(), bencodeConsumer.getPiecesIndex());
 
         final String infoHash = HashEncoder.encodeToSHA1(hashingBytes);
