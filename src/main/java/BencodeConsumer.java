@@ -2,22 +2,18 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
     private Integer startInfoIndex;
     private Integer piecesIndex;
 
-    private final String INFO_JSON = "\"info\"";
-
-    private final String PEICES_JSON = "\"pieces\"";
-
     @Override
     public void onInfoKey(Integer location) {
+        System.out.println("Info location: " + location);
         if (startInfoIndex != null) {
-            System.out.println("Info location: " + location);
             setStartInfoIndex(location);
         }
     }
 
     @Override
     public void onPiecesKey(Integer location) {
+        System.out.println("Pieces location: " + location);
         if (piecesIndex != null) {
-            System.out.println("Pieces location: " + location);
             setPiecesIndex(piecesIndex);
         }
     }
