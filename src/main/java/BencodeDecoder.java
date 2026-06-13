@@ -6,13 +6,34 @@ import java.util.stream.Collectors;
 
 public class BencodeDecoder {
 
+    private final String INFO_JSON = "\"info\"";
+
+    private final String PEICES_JSON = "\"pieces\"";
+
+    public static BencodeListener BencodeListener;
+
+    public interface BencodeListener {
+        void onInfoKey(Integer location);
+        void onPiecesKey(Integer location);
+    }
+
     private static final char BEGIN_ARRAY = 'l';
     private static final char BEGIN_INT = 'i';
     private static final char BEGIN_MAP = 'd';
     private static final char END_CHAR = 'e';
 
     private final Gson gson = new Gson();
-    
+
+    private final BencodeListener bencodeListener;
+
+    public BencodeDecoder() {
+        this.bencodeListener = null;
+    };
+
+    public BencodeDecoder(BencodeListener bencodeListener) {
+        this.bencodeListener = bencodeListener;
+    }
+
     public DecodeMetadata decodeValue(String s, int index) {
         char c = s.charAt(index);
 
@@ -70,6 +91,14 @@ public class BencodeDecoder {
             DecodeMetadata key = decodeValue(s, cursor);
             cursor = key.nextIndex();
 
+
+            // For info hash, capture start of info map
+            if (this.bencodeListener != null) {
+                if (key.value().toString().equals(INFO_JSON)) {
+                    bencodeListener.onInfoKey(key.nextIndex());
+                }
+            }
+
             sb.append(key.value()).append(":");
 
             DecodeMetadata value = decodeValue(s, cursor);
@@ -78,8 +107,15 @@ public class BencodeDecoder {
             if (s.charAt(value.nextIndex()) != END_CHAR) {
                 sb.append(",");
             }
-
             cursor = value.nextIndex();
+
+            // For info hash, capture end of info hash
+            if (this.bencodeListener != null) {
+                if (key.value().toString().equals(PEICES_JSON)) {
+                    bencodeListener.onPiecesKey(value.nextIndex() + 1);
+                }
+            }
+
         }
         final String mapString = sb.append("}").toString();
 

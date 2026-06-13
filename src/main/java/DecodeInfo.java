@@ -1,9 +1,3 @@
-import com.google.gson.Gson;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Map;
 
 public class DecodeInfo {
@@ -28,24 +22,8 @@ public class DecodeInfo {
         return this.infoHash;
     }
 
-    private void setInfoHash(String infoHash) {
+    public void setInfoHash(String infoHash) {
         this.infoHash = infoHash;
-    }
-
-    public void calculateInfoHash() throws NoSuchAlgorithmException {
-        if (getInfo() == null) return;
-
-        if (getInfoHash() != null) return;
-
-        final Gson gson = new Gson();
-
-        final MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-
-        final byte[] infoHash = messageDigest.digest(
-                                    gson.toJson(getInfo())
-                                    .getBytes(StandardCharsets.ISO_8859_1));
-
-        setInfoHash(Arrays.toString(infoHash));
     }
 
     @Override
