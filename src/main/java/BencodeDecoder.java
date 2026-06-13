@@ -95,6 +95,7 @@ public class BencodeDecoder {
             // For info hash, capture start of info map
             if (this.bencodeListener != null) {
                 if (key.value().toString().equals(INFO_JSON)) {
+                    System.out.println("Found");
                     bencodeListener.onInfoKey(key.nextIndex());
                 }
             }
@@ -112,6 +113,7 @@ public class BencodeDecoder {
             // For info hash, capture end of info hash
             if (this.bencodeListener != null) {
                 if (key.value().toString().equals(PEICES_JSON)) {
+                    System.out.println("Found");
                     bencodeListener.onPiecesKey(value.nextIndex() + 1);
                 }
             }
