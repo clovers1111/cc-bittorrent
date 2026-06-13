@@ -5,6 +5,7 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
     @Override
     public void onInfoKey(Integer location) {
         if (startInfoIndex == null) {
+            System.out.println("Info location: " + location);
             setStartInfoIndex(location);
         }
     }
@@ -12,6 +13,7 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
     @Override
     public void onPiecesKey(Integer location) {
         if (piecesIndex == null) {
+            System.out.println("Info location: " + location);
             setPiecesIndex(piecesIndex);
         }
     }
