@@ -14,7 +14,8 @@ public class BencodeDecoder {
 
     public interface BencodeListener {
         void onInfoKey(Integer location);
-        void onPiecesKey(Integer location);
+        void onPiecesKey(Integer beginLocation, Integer endLocation);
+        void onEndInfoKey(Integer endInfoLocation);
     }
 
     private static final char BEGIN_ARRAY = 'l';
@@ -91,14 +92,6 @@ public class BencodeDecoder {
             DecodeMetadata key = decodeValue(s, cursor);
             cursor = key.nextIndex();
 
-
-            // For info hash, capture start of info map
-            if (this.bencodeListener != null) {
-                if (key.value().toString().equals(INFO_JSON)) {
-                    bencodeListener.onInfoKey(key.nextIndex());
-                }
-            }
-
             sb.append(key.value()).append(":");
 
             DecodeMetadata value = decodeValue(s, cursor);
@@ -111,8 +104,15 @@ public class BencodeDecoder {
 
             // For info hash, capture end of info hash
             if (this.bencodeListener != null) {
-                if (key.value().toString().equals(PEICES_JSON)) {
-                    bencodeListener.onPiecesKey(value.nextIndex() + 1);
+                final String keyString = key.value().toString();
+                if (keyString.equals(INFO_JSON)) {
+                    bencodeListener.onInfoKey(key.nextIndex());
+                }
+                if (keyString.equals(PEICES_JSON)) {
+                    final Integer startOfPieces = key.nextIndex();
+                    final Integer endOfPieces = value.nextIndex();
+                    bencodeListener.onPiecesKey(startOfPieces, endOfPieces);
+                    bencodeListener.onEndInfoKey(endOfPieces + 1);
                 }
             }
 

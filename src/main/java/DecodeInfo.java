@@ -10,6 +10,8 @@ public class DecodeInfo {
 
     private String infoHash;
 
+    private String piecesHash;
+
     public String getAnnounce() {
         return announce;
     }
@@ -26,6 +28,14 @@ public class DecodeInfo {
         this.infoHash = infoHash;
     }
 
+    public String getPiecesHash() {
+        return piecesHash;
+    }
+
+    public void setPiecesHash(String piecesHash) {
+        this.piecesHash = piecesHash;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -35,11 +45,15 @@ public class DecodeInfo {
         }
         if (getInfo() != null) {
             if (info.containsKey("length")) {
-            sb.append("Length: ").append(info.get("length")).append("\n");
+                sb.append("Length: ").append(info.get("length")).append("\n");
             }
             sb.append("Info Hash: ").append(getInfoHash()).append("\n");
+            if (info.containsKey("piece length")) {
+                sb.append("Piece Length: ").append(info.get("piece length")).append("\n");
+                sb.append("Piece Hash: ").append(getPiecesHash()).append("\n");
+            }
+
         }
         return sb.toString();
     }
-
 }

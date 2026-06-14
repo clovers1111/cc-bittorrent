@@ -1,11 +1,9 @@
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
@@ -39,12 +37,17 @@ public class Main {
 
       final DecodeInfo decodeInfo = decodeMetadata.toDecodeInfo();
 
-      if (bencodeConsumer.getPiecesIndex() != null && bencodeConsumer.getStartInfoIndex() != null) {
-        final byte[] hashingBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartInfoIndex(), bencodeConsumer.getPiecesIndex());
+      if (bencodeConsumer.getEndInfoIndex() != null && bencodeConsumer.getStartInfoIndex() != null) {
+        final byte[] infoHashBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartInfoIndex(), bencodeConsumer.getEndInfoIndex());
 
-        final String infoHash = HashEncoder.encodeToSHA1(hashingBytes);
+        final byte[] piecesHashBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartPiecesIndex(), bencodeConsumer.getEndPiecesIndex());
+
+        final String infoHash = HashEncoder.encodeToSHA1(infoHashBytes);
+
+        final String piecesHash = HashEncoder.encodeToSHA1(piecesHashBytes);
 
         decodeInfo.setInfoHash(infoHash);
+        decodeInfo.setPiecesHash(piecesHash);
       }
 
       System.out.println(decodeInfo);
