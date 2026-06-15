@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Map;
 
 public class DecodeInfo {
@@ -10,7 +11,7 @@ public class DecodeInfo {
 
     private String infoHash;
 
-    private String piecesHash;
+    private List<String> piecesHash;
 
     public String getAnnounce() {
         return announce;
@@ -28,11 +29,11 @@ public class DecodeInfo {
         this.infoHash = infoHash;
     }
 
-    public String getPiecesHash() {
+    public List<String> getPiecesHash() {
         return piecesHash;
     }
 
-    public void setPiecesHash(String piecesHash) {
+    public void setPiecesHash(List<String> piecesHash) {
         this.piecesHash = piecesHash;
     }
 
@@ -50,7 +51,10 @@ public class DecodeInfo {
             sb.append("Info Hash: ").append(getInfoHash()).append("\n");
             if (info.containsKey("piece length")) {
                 sb.append("Piece Length: ").append(info.get("piece length")).append("\n");
-                sb.append("Piece Hash: ").append(getPiecesHash()).append("\n");
+                sb.append("Piece Hashes: ").append("\n");
+                for (String hash : getPiecesHash()) {
+                    sb.append(hash).append("\n");
+                }
             }
 
         }

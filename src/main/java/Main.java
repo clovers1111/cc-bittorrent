@@ -6,11 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.List;
 
 public class Main {
   private static final Gson gson = new Gson();
 
-  public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
+  public static void main(String[] args) throws Exception {
     String command = args[0];
 
 
@@ -39,12 +40,11 @@ public class Main {
 
       if (bencodeConsumer.getEndInfoIndex() != null && bencodeConsumer.getStartInfoIndex() != null) {
         final byte[] infoHashBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartInfoIndex(), bencodeConsumer.getEndInfoIndex());
-
         final byte[] piecesHashBytes = Arrays.copyOfRange(byteArray, bencodeConsumer.getStartPiecesIndex(), bencodeConsumer.getEndPiecesIndex());
 
-        final String infoHash = HashEncoder.encodeToSHA1(infoHashBytes);
+        final String infoHash = DecodeInfoHashService.hashInfo(infoHashBytes);
+        final List<String> piecesHash = DecodeInfoHashService.hashPieces(piecesHashBytes);
 
-        final String piecesHash = HashEncoder.encodeToSHA1(piecesHashBytes);
 
         decodeInfo.setInfoHash(infoHash);
         decodeInfo.setPiecesHash(piecesHash);
