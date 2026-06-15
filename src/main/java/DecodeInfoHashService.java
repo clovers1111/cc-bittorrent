@@ -36,12 +36,18 @@ public class DecodeInfoHashService {
         }
 
         final List<String> hashPiecesList = new ArrayList<>();
-        for (int i = firstColonIndex + 1; i < lengthOfHashingPieces; i = i + 20) {
-            final byte[] subArrayOfPieces = Arrays.copyOfRange(piecesValueByteArray, i, i + 20);
-            final String piecesEncode = HashEncoder.encodeToSHA1(subArrayOfPieces);
-            hashPiecesList.add(piecesEncode);
+        for (int i = firstColonIndex + 1; i < piecesValueByteArray.length - 1; i += 20) {
+            final StringBuilder sb = new StringBuilder();
+            for (int j = i; j < i + 20; j++) {
+                sb.append(String.format("%02x", piecesValueByteArray[j]));
+            }
+            hashPiecesList.add(sb.toString());
         }
 
     return hashPiecesList;
     }
 }
+
+            /*final byte[] subArrayOfPieces = Arrays.copyOfRange(piecesValueByteArray, i, i + 20);
+            final String piecesEncode = HashEncoder.encodeToSHA1(subArrayOfPieces);
+            hashPiecesList.add(piecesEncode);*/
