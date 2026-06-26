@@ -1,3 +1,5 @@
+package domain;
+
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +37,11 @@ public class DecodeInfo {
 
     public void setPiecesHash(List<String> piecesHash) {
         this.piecesHash = piecesHash;
+    }
+
+    public Integer getLength() {
+        // Stored as an object, so it needs to be cast to Integer
+        return ((Double) info.get("length")).intValue();
     }
 
     @Override

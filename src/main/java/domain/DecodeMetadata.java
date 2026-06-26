@@ -1,6 +1,6 @@
-import com.google.gson.Gson;
+package domain;
 
-import java.nio.charset.StandardCharsets;
+import com.google.gson.Gson;
 
 public record DecodeMetadata(Object value, int nextIndex) {
 

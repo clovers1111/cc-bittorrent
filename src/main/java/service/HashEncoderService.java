@@ -1,7 +1,9 @@
+package service;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashEncoder {
+public class HashEncoderService {
 
     public static String encodeToSHA1(byte[] bytes) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -19,5 +21,19 @@ public class HashEncoder {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    // It is assumed that strings passed here are translated into hex;
+    // every two characters is one byte to be URL encoded
+    public static String encodeHexToUrl(String hex) {
+        final char[] hexCharArray = hex.toCharArray();
+        final StringBuilder sb = new StringBuilder().append('%');
+        for (int i = 0; i < hexCharArray.length; i += 2) {
+            sb.append(hexCharArray[i])
+                    .append(hexCharArray[i+1]);
+                    if (i + 2 < hexCharArray.length)
+                        sb.append('%');
+        }
+        return sb.toString();
     }
 }

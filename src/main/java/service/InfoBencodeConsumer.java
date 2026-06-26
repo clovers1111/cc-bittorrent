@@ -1,18 +1,31 @@
-public class BencodeConsumer implements BencodeDecoder.BencodeListener {
+package service;
+
+import java.util.Set;
+
+public final class InfoBencodeConsumer implements BencodeDecodeService.BencodeListener {
     private Integer startInfoIndex;
     private Integer startPiecesIndex;
     private Integer endPiecesIndex;
     private Integer endInfoIndex;
 
+    private final String PIECES_JSON = "\"pieces\"";
 
-    @Override
+    private final String INFO_JSON = "\"info\"";
+
+    private final Set<String> KEY_SET;
+
+
+    InfoBencodeConsumer() {
+        this.KEY_SET = Set.of(PIECES_JSON, INFO_JSON);
+    }
+
     public void onInfoKey(Integer startInfoIndex) {
         if (getStartInfoIndex() == null) {
             setStartInfoIndex(startInfoIndex);
         }
     }
 
-    @Override
+
     public void onPiecesKey(Integer startPiecesIndex, Integer endPiecesIndex) {
         if (getStartPiecesIndex() == null && getEndPiecesIndex() == null) {
             setStartPiecesIndex(startPiecesIndex);
@@ -20,10 +33,9 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
         }
     }
 
-    @Override
     public void onEndInfoKey(Integer endInfoIndex) {
         if (getEndInfoIndex() == null) {
-            setEndInfoIndex(endInfoIndex);
+            setEndInfoIndex(endInfoIndex + 1);
         }
     }
 
@@ -58,5 +70,19 @@ public class BencodeConsumer implements BencodeDecoder.BencodeListener {
 
     public Integer getStartInfoIndex() {
         return startInfoIndex;
+    }
+
+    @Override
+    public void onKeyParsed(String key, Integer beginPosition, Integer endPosition) {
+        if (KEY_SET.contains(key)) {
+            if (key.equals(INFO_JSON)) {
+                // Info key doesn't have an end value
+                onInfoKey(beginPosition);
+            }
+            if (key.equals(PIECES_JSON)) {
+                onPiecesKey(beginPosition, endPosition);
+                onEndInfoKey(endPosition + 1);
+            }
+        }
     }
 }

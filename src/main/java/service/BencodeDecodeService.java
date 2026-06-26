@@ -1,10 +1,12 @@
+package service;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BencodeDecoder {
+public class BencodeDecodeService {
 
     private final String INFO_JSON = "\"info\"";
 
@@ -13,9 +15,7 @@ public class BencodeDecoder {
     public static BencodeListener BencodeListener;
 
     public interface BencodeListener {
-        void onInfoKey(Integer location);
-        void onPiecesKey(Integer beginLocation, Integer endLocation);
-        void onEndInfoKey(Integer endInfoLocation);
+        void onKeyParsed(String key, Integer beginPosition, Integer endPosition);
     }
 
     private static final char BEGIN_ARRAY = 'l';
@@ -27,11 +27,11 @@ public class BencodeDecoder {
 
     private final BencodeListener bencodeListener;
 
-    public BencodeDecoder() {
+    public BencodeDecodeService() {
         this.bencodeListener = null;
     };
 
-    public BencodeDecoder(BencodeListener bencodeListener) {
+    public BencodeDecodeService(BencodeListener bencodeListener) {
         this.bencodeListener = bencodeListener;
     }
 
@@ -104,18 +104,12 @@ public class BencodeDecoder {
 
             // For info hash, capture end of info hash
             if (this.bencodeListener != null) {
-                final String keyString = key.value().toString();
-                if (keyString.equals(INFO_JSON)) {
-                    bencodeListener.onInfoKey(key.nextIndex());
-                }
-                if (keyString.equals(PEICES_JSON)) {
-                    final Integer startOfPieces = key.nextIndex();
-                    final Integer endOfPieces = value.nextIndex();
-                    bencodeListener.onPiecesKey(startOfPieces, endOfPieces);
-                    bencodeListener.onEndInfoKey(endOfPieces + 1);
-                }
+                this.bencodeListener.onKeyParsed(
+                        key.value().toString(),
+                        key.nextIndex(),
+                        value.nextIndex()
+                );
             }
-
         }
         final String mapString = sb.append("}").toString();
 

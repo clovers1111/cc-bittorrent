@@ -1,17 +1,15 @@
-import java.nio.charset.StandardCharsets;
+package service;
+
 import java.security.NoSuchAlgorithmException;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class DecodeInfoHashService {
 
     private static final int COLON_BYTE_IN_DEC = 58;
 
     public static String hashInfo(byte[] infoValueByteArray) throws NoSuchAlgorithmException {
-        return HashEncoder.encodeToSHA1(infoValueByteArray);
+        return HashEncoderService.encodeToSHA1(infoValueByteArray);
     }
 
     public static List<String> hashPieces(byte[] piecesValueByteArray) throws Exception {
@@ -49,5 +47,5 @@ public class DecodeInfoHashService {
 }
 
             /*final byte[] subArrayOfPieces = Arrays.copyOfRange(piecesValueByteArray, i, i + 20);
-            final String piecesEncode = HashEncoder.encodeToSHA1(subArrayOfPieces);
+            final String piecesEncode = service.HashEncoderService.encodeToSHA1(subArrayOfPieces);
             hashPiecesList.add(piecesEncode);*/
