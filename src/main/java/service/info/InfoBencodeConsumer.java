@@ -1,4 +1,6 @@
-package service;
+package service.info;
+
+import service.BencodeDecodeService;
 
 import java.util.Set;
 
@@ -15,7 +17,7 @@ public final class InfoBencodeConsumer implements BencodeDecodeService.BencodeLi
     private final Set<String> KEY_SET;
 
 
-    InfoBencodeConsumer() {
+    public InfoBencodeConsumer() {
         this.KEY_SET = Set.of(PIECES_JSON, INFO_JSON);
     }
 

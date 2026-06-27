@@ -2,7 +2,7 @@ import com.google.gson.Gson;
 import domain.DecodeInfo;
 import domain.DecodeMetadata;
 import service.BencodeDecodeService;
-import service.DecodeInfoService;
+import service.info.DecodeInfoService;
 import service.HashEncoderService;
 
 import java.net.URI;
@@ -28,7 +28,7 @@ public class Main {
       final DecodeMetadata decodeMetadata = bencodeDecoder.decodeValue(bencodedValue, 0);
       System.out.println(decodeMetadata.value());
 
-    } else if ("info".equals(command) || "peers".equals(command)) {
+    } else if ("info".equals(command)) {
 
       final DecodeInfoService decodeInfoService = new DecodeInfoService();
 
@@ -36,9 +36,11 @@ public class Main {
 
       final DecodeInfo decodeInfo = decodeInfoService.createDecodeInfo(torrentFile);
 
-      if ("info".equals(command)) {
       System.out.println(decodeInfo);
-      } else {
+    } else if ("peers".equals(command)) {
+
+        final DecodePeersService decodePeers = new DecodePeersService();
+
         try (HttpClient httpClient = HttpClient.newHttpClient()) {
 
           final String urlEncodedInfoHash = HashEncoderService.encodeHexToUrl(decodeInfo.getInfoHash());

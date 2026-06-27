@@ -1,7 +1,9 @@
-package service;
+package service.info;
 
 import domain.DecodeInfo;
 import domain.DecodeMetadata;
+import service.BencodeDecodeService;
+import service.DecodeService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
@@ -61,7 +63,12 @@ public class DecodeInfoService implements DecodeService {
         return DecodeInfoHashService.hashPieces(piecesHashBytes);
     }
 
-    private boolean validDecodeInfo() {
+    @Override
+    public boolean isValidDecode() {
+        return validDecodeInfo()
+    }
+
+    private boolean validDecodeInfo(Class<? extends BencodeDecodeService.BencodeListener> clazz) {
         return Arrays.stream(BencodeConsumer.class.getDeclaredMethods())
                 .filter(m -> m.getParameterCount() == 0)
                 .filter(m -> m.getReturnType() == Integer.class)
@@ -74,6 +81,5 @@ public class DecodeInfoService implements DecodeService {
                     }
                 })
                 .allMatch(Objects::nonNull);
-
     }
 }

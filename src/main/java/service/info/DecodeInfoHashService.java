@@ -1,4 +1,6 @@
-package service;
+package service.info;
+
+import service.HashEncoderService;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

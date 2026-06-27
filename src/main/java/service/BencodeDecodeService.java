@@ -1,16 +1,13 @@
 package service;
 
 import com.google.gson.Gson;
+import domain.DecodeMetadata;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BencodeDecodeService {
-
-    private final String INFO_JSON = "\"info\"";
-
-    private final String PEICES_JSON = "\"pieces\"";
 
     public static BencodeListener BencodeListener;
 
@@ -46,7 +43,6 @@ public class BencodeDecodeService {
             return decodeString(s, index);
         } else if (c == BEGIN_MAP) {
             return decodeMap(s, index);
-
         }
         throw new IllegalArgumentException("Invalid bencode at index " + index);
     }
@@ -102,7 +98,7 @@ public class BencodeDecodeService {
             }
             cursor = value.nextIndex();
 
-            // For info hash, capture end of info hash
+            // Capture the indexes of encoded values from this payload for later decoding
             if (this.bencodeListener != null) {
                 this.bencodeListener.onKeyParsed(
                         key.value().toString(),
